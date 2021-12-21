@@ -28,6 +28,7 @@ export default class Cli {
   public async run() {
     console.log('run');
     try {
+      console.log('test')
       await this.prepare();
       /* 命令注册 */
       this.registerCommand();
@@ -158,4 +159,5 @@ export default class Cli {
 
     return cliConfig;
   }
+
 }
