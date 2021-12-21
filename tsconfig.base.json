@@ -1,0 +1,10 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "noImplicitAny" : false,
+    "strict": false
+  },
+  "exclude": [
+
+  ]
+}
