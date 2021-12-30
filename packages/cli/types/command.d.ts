@@ -1,4 +1,4 @@
-declare namespace Init {
+declare namespace NInit {
   interface Command {
     /* 命令名称 */
     name: string
@@ -13,10 +13,13 @@ declare namespace Init {
     }
   }
 
-  interface TaroProject {
+  interface ProjectBaseInfo {
     projectName: string
     projectVersion: string
     description: string
+  }
+
+  interface TaroProject extends ProjectBaseInfo{
     date: string
     appId: string
   }

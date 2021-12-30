@@ -18,6 +18,9 @@ export const INIT_PACKAGE: Constant.InitPackage[] = [
     isNpmPkg: false
   }
 ];
+export const TEMPLATE_TYPE_NORMAL: string = 'normal';
+export const TEMPLATE_TYPE_CUSTOM: string = 'custom';
+export const WHITE_COMMAND = ['npm', 'cnpm'];
 
 export const PromptConfig = {
   emptyDir: {
@@ -80,6 +83,23 @@ export const PromptConfig = {
     },
     filter: function (v) {
       return !require('semver').valid(v) ? v : require('semver').valid(v);
+    }
+  },
+  description: {
+    type: 'input',
+    name: 'description',
+    message: `请输入项目描述信息`,
+    default: '',
+    validate: function (v) {
+      // @ts-ignore
+      const done = this.async();
+      setTimeout(function () {
+        if (!v) {
+          done('请输入描述信息！');
+          return;
+        }
+        done(null, true);
+      }, 0);
     }
   },
   appId: {

@@ -1,31 +1,31 @@
-const inquirer = require('inquirer');
-const fse = require('fs-extra');
+import Init from '@models/init';
 
-import Command from '@models/command';
+const inquirer = require('inquirer');
+
 import log from '@utils/log';
 import { TaroTemplate, PromptConfig } from '@constant';
-import { dirIsEmpty, isValidName, formatDate } from '@utils/common';
-class Taro extends Command<Init.Command>{
-  projectInfo: Init.TaroProject = {
+import { isValidName, formatDate } from '@utils/common';
+class Taro extends Init {
+  projectInfo: NInit.TaroProject = {
     projectName: '',
     projectVersion: '',
     description: '',
     date: '',
     appId: ''
   };
-  templateInfo: Constant.Template = {
-    name: '',
-    npmName: '',
-    version: '',
-    type: '',
-    installCommand: '',
-    startCommand: '',
-    tag: [],
-    ignore: []
-  };
-  force: boolean = false;
+  // templateInfo: Constant.Template = {
+  //   name: '',
+  //   npmName: '',
+  //   version: '',
+  //   type: '',
+  //   installCommand: '',
+  //   startCommand: '',
+  //   tag: [],
+  //   ignore: []
+  // };
+  // force: boolean = false;
 
-  constructor (command: Init.Command) {
+  constructor (command: NInit.Command) {
     super(command);
   }
 
@@ -41,64 +41,33 @@ class Taro extends Command<Init.Command>{
 
   public async exec() {
     try {
-      await this.prepare();
-      const projectInfo = await this.getProjectInfo();
-      this.templateInfo = await this.chooseTemplate();
+      await this.checkDir();
+      this.projectBaseInfo = await this.getProjectBaseInfo();
+      this.projectInfo = await this.getProjectCustomInfo();
+      this.templateInfo = await this.chooseTemplate(PromptConfig.projectTemplate(TaroTemplate));
       await this.downloadTemplate();
-      log.verbose('projectInfo', projectInfo);
+      await this.installTemplate();
+      await this.ejsRender(this.projectInfo);
+      const { installCommand, startCommand } = this.templateInfo;
+      // 依赖安装
+      await this.execCommand(installCommand, '依赖安装失败！');
+      // 启动命令执行
+      await this.execCommand(startCommand, '启动执行命令失败！');
+      log.verbose('projectInfo', this.projectInfo);
     } catch (e) {
-      console.log(e);
+      throw e;
     }
   }
 
-  public async prepare() {
-    // 判断当前目录是否为空
-    const localPath = process.cwd();
-    let emptyDir = false;
-    if (!dirIsEmpty(localPath)) {
-      log.verbose('目录不为空');
-      if (!this.force) {
-        emptyDir = (await inquirer.prompt(PromptConfig.emptyDir)).emptyDir;
-        if (!emptyDir) {
-          return;
-        }
-      }
-
-      if (emptyDir || this.force) {
-        const { confirmEmptyDir } = await inquirer.prompt(PromptConfig.confirmEmptyDir);
-        if (confirmEmptyDir) {
-          // 清空当前目录
-          fse.emptyDirSync(localPath);
-        }
-      }
-    }
-  }
-
-  public async getProjectInfo() {
-    let projectName;
-    // 项目名称
-    if (!this.projectInfo.projectName) {
-      projectName = (await inquirer.prompt(PromptConfig.projectName)).projectName;
-    }
-    // 项目版本
-    const { projectVersion } = await inquirer.prompt(PromptConfig.projectVersion);
-    // 微信AppId
+  public async getProjectCustomInfo() {
+    // 微信appid
     const { appId } = await inquirer.prompt(PromptConfig.appId);
-    console.log(new Date());
     return {
-      projectName: projectName || this.projectInfo.projectName,
-      projectVersion,
+      ...this.projectBaseInfo,
       appId,
       date: formatDate('yyyy-MM-dd')
     };
   }
-
-  public async chooseTemplate() {
-    const { projectTemplate } = await inquirer.prompt(PromptConfig.projectTemplate(TaroTemplate));
-    return projectTemplate;
-  }
-
-  public async downloadTemplate() {}
 }
 
 export default function (props) {

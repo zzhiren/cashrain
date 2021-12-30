@@ -34,7 +34,7 @@
     "resolveMappedPaths": true,
     "esModuleInterop": true,
     "types": ["node"],
-    "typeRoots": ["./types/**"],
+    "typeRoots": ["./types/**", "./types/models/**"],
     "skipLibCheck": true,
     "baseUrl": "./",
     "paths": {

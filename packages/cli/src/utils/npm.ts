@@ -4,7 +4,7 @@ const axios = require('axios');
 const urlJoin = require('url-join');
 const semver = require('semver');
 
-export function getNpmInfo(npmName: string, registry: string) {
+export function getNpmInfo(npmName: string, registry?: string) {
   if (!npmName) {
     return null;
   }
@@ -25,11 +25,11 @@ export function getNpmInfo(npmName: string, registry: string) {
     });
 }
 
-export function getDefaultRegistry(isOriginal: boolean = true) {
+export function getDefaultRegistry(isOriginal: boolean = true): string {
   return isOriginal ? 'https://registry.npmjs.org' : 'http://10.241.65.86:8081';
 }
 
-export async function getNpmVersions(npmName, registry) {
+export async function getNpmVersions(npmName: string, registry?: string) {
   const data = await getNpmInfo(npmName, registry);
   if (data) {
     return Object.keys(data.versions);
@@ -44,7 +44,7 @@ export async function getNpmLatestVersion(npmName: string, registry?: string) {
     return versions.sort((a, b) => semver.gt(b, a))[0];
   }
 
-  return null;
+  return '';
 }
 
 export function getSemverVersions(baseVersion: string, versions: string[]) {
@@ -59,6 +59,6 @@ export async function getNpmSemverVersions(baseVersion: string, npmName: string,
   if (newVersions && newVersions.length > 0) {
     return newVersions[0];
   } else {
-    return ''
+    return '';
   }
 }
