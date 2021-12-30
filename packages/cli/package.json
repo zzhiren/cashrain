@@ -13,7 +13,8 @@
   "bin": {
     "cashrain": "bin/index.js",
     "cash": "bin/index.js",
-    "rain": "bin/index.js"
+    "rain": "bin/index.js",
+    "taroInit": "lib/commands/taro.js"
   },
   "scripts": {
     "start": "tsc --watch"
@@ -28,12 +29,24 @@
     "type": "git",
     "url": "git+https://github.com/Zzhiren/zaro.git"
   },
+  "_moduleAliases": {
+    "@/": ".",
+    "@constant": "lib/constant.js",
+    "@models": "lib/models",
+    "@utils": "lib/utils",
+    "@core": "lib/core",
+    "@commands": "lib/commands"
+  },
   "dependencies": {
+    "@types/fs-extra": "^9.0.13",
     "axios": "^0.24.0",
     "colors": "^1.4.0",
     "commander": "^8.3.0",
     "dotenv": "^10.0.0",
+    "fs-extra": "^10.0.0",
     "import-local": "^3.0.3",
+    "inquirer": "^8.2.0",
+    "module-alias": "^2.2.2",
     "npmlog": "^6.0.0",
     "path-browserify": "^1.0.1",
     "path-exists": "4.0.0",

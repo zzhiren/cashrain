@@ -1,10 +1,10 @@
 #! /usr/bin/env node
-
+require('module-alias/register')
 const importLocal = require('import-local');
-const { Cli } = require('../dist').default;
-console.log(Cli)
+const { Cli } = require('../lib').default;
 if (importLocal(__filename)) {
-  require('npmlog').info('cli', '正在使用web-cli-dev本地版本')
+  require('npmlog').info('cli', '正在使用@cashrain/cli本地版本')
 } else {
-  console.log(new Cli(process.argv.slice(2)).run())
+  const shell = process.argv[1].slice(process.argv[1].lastIndexOf('/') + 1)
+  new Cli(shell, process.argv.slice(2)).run();
 }

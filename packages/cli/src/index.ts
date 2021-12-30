@@ -1,4 +1,5 @@
-import Cli from './core/cli';
+import Cli from '@core/cli';
+
 export default {
   Cli
 }

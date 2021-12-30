@@ -10,25 +10,27 @@ const pkg: Pkg = require('../../package.json');
 
 
 import { Command } from 'commander';
-import { getNpmSemverVersions } from '../utils/npm';
+import { getNpmSemverVersions } from '@utils/npm';
 import { DEFAULT_CLI_HOME } from '../constant';
 
-import Exec from '../core/exec';
-import log from '../utils/log';
+import Exec from '@core/exec';
+import log from '@utils/log';
 
 
 export default class Cli {
+  shell: string = 'cashrain';
   cmdOptions: string[] = [];
   program: Command = new Command();
-  public constructor(cmdOptions: string[]) {
-    console.log(cmdOptions);
+
+  public constructor(shell: string, cmdOptions: string[]) {
+    this.shell = shell;
     this.cmdOptions = cmdOptions;
   }
 
   public async run() {
-    console.log('run');
     try {
-      console.log('test')
+      const welcome = this.shell === 'cash' ? '钱多多' : this.shell === 'rain' ? '小雨' : '';
+      welcome && log.welcome(`${welcome}帮您创建工程~~~`);
       await this.prepare();
       /* 命令注册 */
       this.registerCommand();
@@ -55,14 +57,31 @@ export default class Cli {
     this.program
       .name(Object.keys(pkg.bin)[0])
       .usage('<command> [options]')
+      .name(Object.keys(pkg.bin)[1])
+      .usage('<command> [options]')
+      .name(Object.keys(pkg.bin)[2])
+      .usage('<command> [options]')
       .version(pkg.version)
-      .option('-d, --debug', '是否开启调式模式', false)
-      .option('-tp, --targetPath <targetPath>', '是否指定本地调试路径');
+      .option('-d, --debug', '是否开启调式模式', false);
+    // .option('-tp, --targetPath <targetPath>', '是否指定本地调试路径');
 
     this.program
       .command('init [projectName]')
+      .description('初始化项目')
       .option('-f, --force', '是否开启强制初始化项目', false)
-      .action(new Exec().run);
+      .action(Exec);
+
+    this.program
+      .command('h5 [projectName]')
+      .description('初始化H5项目')
+      .option('-f, --force', '是否开启强制初始化项目', false)
+      .action(Exec);
+
+    this.program
+      .command('taro [projectName]')
+      .description('初始化Taro项目')
+      .option('-f, --force', '是否开启强制初始化项目', false)
+      .action(Exec);
 
     /* 监听debug */
     this.program.on('option:debug',  () => {
@@ -72,9 +91,10 @@ export default class Cli {
         process.env.LOG_LEVEL = 'info';
       }
       log.level = process.env.LOG_LEVEL;
+      log.verbose('开启Debug模式！');
     });
 
-    /* 监听targetPath */
+    /* TODO 监听targetPath */
     this.program.on('option:targetPath',  () => {
       process.env.CLI_TARGET_PATH = this.program.opts().targetPath;
     });
@@ -97,7 +117,7 @@ export default class Cli {
   }
 
   public checkPkgVersion() {
-    console.log(pkg.version);
+    log.version('@cashrain/cli version:', pkg.version);
   }
 
   public checkRoot() {

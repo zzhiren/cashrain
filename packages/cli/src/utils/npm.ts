@@ -25,7 +25,7 @@ export function getNpmInfo(npmName: string, registry: string) {
     });
 }
 
-export function getDefaultRegistry(isOriginal: boolean = false) {
+export function getDefaultRegistry(isOriginal: boolean = true) {
   return isOriginal ? 'https://registry.npmjs.org' : 'http://10.241.65.86:8081';
 }
 
