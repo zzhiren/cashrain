@@ -19,8 +19,12 @@ declare namespace NInit {
     description: string
   }
 
-  interface TaroProject extends ProjectBaseInfo{
+  interface TaroProject extends ProjectBaseInfo {
     date: string
     appId: string
+  }
+
+  interface VueProject extends ProjectBaseInfo {
+
   }
 }

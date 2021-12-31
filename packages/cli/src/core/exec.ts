@@ -4,16 +4,14 @@ import log from '@utils/log';
 import { GetCommandOptions } from '@utils/command';
 import { INIT_PACKAGE } from '@constant';
 import {
-  Init,
   Taro,
-  H5
+  Vue
 } from '@commands/index';
 
 class Exec {
-  command: Init.Command;
+  command: NInit.Command;
   commandConfig = {
-    init: Init,
-    h5: H5,
+    vue: Vue,
     taro: Taro
   };
 

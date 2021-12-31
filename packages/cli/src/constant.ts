@@ -6,9 +6,9 @@ export const HEADING: string = 'cashrain';
 
 export const INIT_PACKAGE: Constant.InitPackage[] = [
   {
-    packageName: 'h5',
+    packageName: 'vue',
     version: '',
-    description: '初始化H5项目',
+    description: '初始化Vue项目',
     isNpmPkg: false
   },
   {
@@ -74,7 +74,7 @@ export const PromptConfig = {
       // @ts-ignore
       const done = this.async();
       setTimeout(function () {
-        if (!(!!require('semver').valid(v))) {
+        if (!require('semver').valid(v)) {
           done('请输入合法的版本号');
           return;
         }
@@ -119,12 +119,15 @@ export const PromptConfig = {
       }, 0);
     }
   },
-  projectTemplate: function (templateList: Constant.Template[], title: string = '项目') {
+  projectTemplate: function (
+    templateList: Constant.Template[],
+    title: string = '项目'
+  ) {
     return {
       type: 'list',
       name: 'projectTemplate',
       message: `请选择${title}模板`,
-      choices: templateList.map(item => ({
+      choices: templateList.map((item) => ({
         value: item,
         name: item.name
       }))
@@ -140,6 +143,19 @@ export const TaroTemplate: Constant.Template[] = [
     type: 'normal',
     installCommand: 'npm install',
     startCommand: 'npm run dev:weapp',
+    tag: ['project'],
+    ignore: ['**/public/**']
+  }
+];
+
+export const VueTemplate: Constant.Template[] = [
+  {
+    name: 'vue2标准模板',
+    npmName: '@cashrain/vue2-standard-template',
+    version: '1.0.0',
+    type: 'normal',
+    installCommand: 'npm install',
+    startCommand: 'npm run serve',
     tag: ['project'],
     ignore: ['**/public/**']
   }

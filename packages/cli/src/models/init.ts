@@ -1,6 +1,5 @@
 'use strict';
 
-
 const path = require('path');
 const inquirer = require('inquirer');
 const userHome = require('user-home');
@@ -15,7 +14,8 @@ import {
   dirIsEmpty,
   isValidName,
   spinnerStart,
-  sleep
+  sleep,
+  oraSpinner
 } from '@utils/common';
 import { execAsync } from '@utils/exec';
 import {
@@ -74,8 +74,14 @@ export default class Init extends Command<NInit.Command>{
       if (emptyDir || this.force) {
         const { confirmEmptyDir } = await inquirer.prompt(PromptConfig.confirmEmptyDir);
         if (confirmEmptyDir) {
-          // 清空当前目录
-          fse.emptyDirSync(localPath);
+          const spinner = oraSpinner('清空目录中...');
+          try {
+            // 清空当前目录
+            await fse.emptyDir(localPath);
+            spinner.stop();
+          } catch (e) {
+            spinner.fail(e);
+          }
         }
       }
     }
@@ -114,30 +120,28 @@ export default class Init extends Command<NInit.Command>{
     });
 
     if(!await templatePackage.exists()) {
-      const spinner = spinnerStart('正在下载模板...');
+      const spinner = oraSpinner('正在下载模板...');
       await sleep();
       try {
         await templatePackage.install();
       } catch (e) {
         throw e;
       } finally {
-        spinner.stop(true);
         if (await templatePackage.exists()) {
-          log.success('下载模板成功');
+          spinner.succeed('下载模板成功');
           this.templatePackage = templatePackage;
         }
       }
     } else {
-      const spinner = spinnerStart('正在更新模板...');
+      const spinner = oraSpinner('正在更新模板...');
       await sleep();
       try {
         await templatePackage.update();
       } catch (e) {
         throw e;
       } finally {
-        spinner.stop(true);
         if (await templatePackage.exists()) {
-          log.success('更新模板成功');
+          spinner.succeed('更新模板成功');
           this.templatePackage = templatePackage;
         }
       }

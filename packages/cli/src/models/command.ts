@@ -3,7 +3,7 @@
 const semver = require('semver');
 const colors = require('colors');
 
-import log from '../utils/log';
+import log from '@utils/log';
 import { isObject } from '@utils/common';
 import { LOWEST_NODE_VERSION, HEADING } from '../constant';
 

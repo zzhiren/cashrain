@@ -1,15 +1,14 @@
 export class GetCommandOptions {
   private static commandMap = {
-    init: 'init',
     taro: 'init',
-    h5: 'init'
+    vue: 'init'
   };
   static getOptions(cmdArgv) {
     const cmdName = cmdArgv[cmdArgv.length - 1].name();
     return GetCommandOptions[this.commandMap[cmdName]](cmdArgv);
   }
 
-  static init(cmdArgv): Init.Command {
+  static init(cmdArgv): NInit.Command {
     const args: any[] = Array.from(cmdArgv);
     const cmd = args[args.length - 1] as object;
     const obj = Object.create(null);

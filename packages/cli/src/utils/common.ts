@@ -59,3 +59,9 @@ export function spinnerStart(msg, spinnerString = '|/-\\') {
 export function sleep(timeout = 1000) {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
+
+export function oraSpinner(msg: string) {
+  const ora = require('ora')(msg);
+  ora.start();
+  return ora;
+}

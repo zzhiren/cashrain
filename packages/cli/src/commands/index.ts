@@ -1,10 +1,8 @@
-import Init from './init';
-import H5 from './h5';
+import Vue from './vue';
 import Taro from './taro';
 
 export {
-  Init,
-  H5,
+  Vue,
   Taro
 };
 

@@ -1,21 +1,16 @@
 import Init from '@models/init';
-
-const inquirer = require('inquirer');
-
 import log from '@utils/log';
-import { TaroTemplate, PromptConfig } from '@constant';
-import { isValidName, formatDate } from '@utils/common';
-class Taro extends Init {
-  projectInfo: NInit.TaroProject = {
+import { isValidName } from '@utils/common';
+import { PromptConfig, VueTemplate } from '@constant';
+
+class Vue extends Init{
+  projectInfo: NInit.VueProject = {
     projectName: '',
     projectVersion: '',
-    description: '',
-    date: '',
-    appId: ''
+    description: ''
   };
-
-  constructor (command: NInit.Command) {
-    super(command);
+  constructor (cmdOptions: NInit.Command) {
+    super(cmdOptions);
   }
 
   public init() {
@@ -33,7 +28,7 @@ class Taro extends Init {
       await this.checkDir();
       this.projectBaseInfo = await this.getProjectBaseInfo();
       this.projectInfo = await this.getProjectCustomInfo();
-      this.templateInfo = await this.chooseTemplate(PromptConfig.projectTemplate(TaroTemplate));
+      this.templateInfo = await this.chooseTemplate(PromptConfig.projectTemplate(VueTemplate));
       await this.downloadTemplate();
       await this.installTemplate();
       await this.ejsRender(this.projectInfo);
@@ -49,17 +44,13 @@ class Taro extends Init {
   }
 
   public async getProjectCustomInfo() {
-    // 微信appid
-    const { appId } = await inquirer.prompt(PromptConfig.appId);
     return {
-      ...this.projectBaseInfo,
-      appId,
-      date: formatDate('yyyy-MM-dd')
+      ...this.projectBaseInfo
     };
   }
 }
 
 export default function (props) {
   // tslint:disable-next-line:no-unused-expression
-  new Taro(props);
+  new Vue(props);
 }

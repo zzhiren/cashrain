@@ -63,7 +63,6 @@ export default class Cli {
       .usage('<command> [options]')
       .version(pkg.version)
       .option('-d, --debug', '是否开启调式模式', false);
-    // .option('-tp, --targetPath <targetPath>', '是否指定本地调试路径');
 
     this.program
       .command('init [projectName]')
@@ -72,8 +71,8 @@ export default class Cli {
       .action(Exec);
 
     this.program
-      .command('h5 [projectName]')
-      .description('初始化H5项目')
+      .command('vue [projectName]')
+      .description('初始化Vue项目')
       .option('-f, --force', '是否开启强制初始化项目', false)
       .action(Exec);
 
