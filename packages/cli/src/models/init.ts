@@ -58,6 +58,10 @@ export default class Init extends Command<NInit.Command>{
     log.verbose('this.projectBaseInfo', this.projectBaseInfo);
   }
 
+
+  /**
+   * 检查当前目录是否为空，如果为空，则询问是否清空目录
+   */
   public async checkDir() {
     // 判断当前目录是否为空
     const localPath = process.cwd();
@@ -87,7 +91,15 @@ export default class Init extends Command<NInit.Command>{
     }
   }
 
-  public async getProjectBaseInfo() {
+  /**
+   * 获取项目基本信息
+   * @returns {
+   *   projectName: string
+   *   projectVersion: string
+   *   description: string
+   * }
+   */
+  public async getProjectBaseInfo(): Promise<NInit.ProjectBaseInfo> {
     let { projectName } = this.projectBaseInfo;
     // 项目名称
     if (!projectName) {
@@ -103,9 +115,17 @@ export default class Init extends Command<NInit.Command>{
     };
   }
 
-  public async chooseTemplate(prompt) {
-    const { projectTemplate } = await inquirer.prompt(prompt);
-    return projectTemplate;
+  /**
+   * 选择项目模板
+   * @returns Constant.Template
+   */
+  public async chooseTemplate(prompt): Promise<Constant.Template> {
+    try {
+      const { projectTemplate } = await inquirer.prompt(prompt);
+      return projectTemplate;
+    } catch (e) {
+      throw e;
+    }
   }
 
   public async downloadTemplate() {
@@ -184,7 +204,9 @@ export default class Init extends Command<NInit.Command>{
 
   }
 
-  public async installCustomTemplate() {}
+  public async installCustomTemplate() {
+    // TODO
+  }
 
   public async ejsRender(projectInfo) {
     const templateIgnore = this.templateInfo.ignore || [];

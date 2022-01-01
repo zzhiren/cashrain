@@ -14,13 +14,21 @@ declare namespace Constant {
   }
 
   interface Template {
+    /* 模板名称 */
     name: string
+    /* npm包名称 */
     npmName: string
+    /* 版本 */
     version: string
+    /* 项目类型 normal|component */
     type: string
+    /* 安装命令 */
     installCommand: string
+    /* 启动命令 */
     startCommand: string
+    /* 标签 */
     tag: string[]
+    /* 忽略文件 */
     ignore: string[]
   }
 }

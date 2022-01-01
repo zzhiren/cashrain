@@ -14,13 +14,18 @@ declare namespace NInit {
   }
 
   interface ProjectBaseInfo {
+    /* 项目名称 */
     projectName: string
+    /* 项目版本 */
     projectVersion: string
+    /* 项目描述信息 */
     description: string
   }
 
   interface TaroProject extends ProjectBaseInfo {
+    /* 日期 */
     date: string
+    /* 微信AppId */
     appId: string
   }
 
