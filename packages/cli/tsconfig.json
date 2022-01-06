@@ -2,7 +2,7 @@
   "include": [
     "src/",
     "src/utils/*",
-    "types/*"
+    "types/**.d.ts"
   ],
   "exclude": [],
   "compileOnSave": true,
@@ -34,7 +34,7 @@
     "resolveMappedPaths": true,
     "esModuleInterop": true,
     "types": ["node"],
-    "typeRoots": ["./types/**", "./types/models/**"],
+    "typeRoots": ["./types/**"],
     "skipLibCheck": true,
     "baseUrl": "./",
     "paths": {

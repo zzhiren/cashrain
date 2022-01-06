@@ -1,4 +1,4 @@
-import Init from '@models/init';
+import Init, { NInit } from '@models/init';
 import log from '@utils/log';
 import { isValidName } from '@utils/common';
 import { PromptConfig, VueTemplate } from '@constant';

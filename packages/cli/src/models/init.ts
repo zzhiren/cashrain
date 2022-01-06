@@ -26,6 +26,33 @@ import {
 } from '../constant';
 
 
+export namespace NInit {
+  export interface Command extends BaseCommand {
+    /* 项目名称 */
+    projectName: string
+  }
+
+  export interface ProjectBaseInfo {
+    /* 项目名称 */
+    projectName: string
+    /* 项目版本 */
+    projectVersion: string
+    /* 项目描述信息 */
+    description: string
+  }
+
+  export interface TaroProject extends ProjectBaseInfo {
+    /* 日期 */
+    date: string
+    /* 微信AppId */
+    appId: string
+  }
+
+  export interface VueProject extends ProjectBaseInfo {
+
+  }
+}
+
 export default class Init extends Command<NInit.Command>{
   projectBaseInfo: NInit.ProjectBaseInfo = {
     projectName: '',
@@ -86,6 +113,8 @@ export default class Init extends Command<NInit.Command>{
           } catch (e) {
             spinner.fail(e);
           }
+        } else {
+          throw new Error('停止创建工程！');
         }
       }
     }

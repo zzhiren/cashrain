@@ -1,4 +1,4 @@
-import Init from '@models/init';
+import Init, { NInit } from '@models/init';
 
 const inquirer = require('inquirer');
 

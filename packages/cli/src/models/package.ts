@@ -4,6 +4,23 @@ import * as fse from 'fs-extra';
 import { isObject } from '@utils/common';
 import { getNpmLatestVersion, getDefaultRegistry } from '@utils/npm';
 
+export namespace NPackage {
+  export interface Options {
+    targetPath: string
+    storeDir: string
+    packageName: string
+    packageVersion: string
+  }
+
+  export interface Package {
+    targetPath: string
+    storeDir: string
+    packageName: string
+    packageVersion: string
+  }
+}
+
+
 export default class Package {
   targetPath: string = '';
   storeDir: string = '';

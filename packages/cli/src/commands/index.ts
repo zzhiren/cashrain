@@ -1,8 +1,3 @@
-import Vue from './vue';
-import Taro from './taro';
-
-export {
-  Vue,
-  Taro
-};
-
+export { default as Vue } from './vue';
+export { default as Taro } from './taro';
+export { default as Touch } from './touch';

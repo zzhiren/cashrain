@@ -5,14 +5,16 @@ import { GetCommandOptions } from '@utils/command';
 import { INIT_PACKAGE } from '@constant';
 import {
   Taro,
-  Vue
+  Vue,
+  Touch
 } from '@commands/index';
 
 class Exec {
   command: NInit.Command;
   commandConfig = {
     vue: Vue,
-    taro: Taro
+    taro: Taro,
+    touch: Touch
   };
 
   constructor (cmdArgv: { [propName: string]: any }) {
@@ -20,7 +22,10 @@ class Exec {
     log.verbose('this.command', this.command);
   }
 
-  public async run() {
+  /**
+   * 初始化工程
+   */
+  public async init() {
     let command;
     if (this.command.name === 'init') {
       command = (await this.chooseCommand()).command;
@@ -36,6 +41,13 @@ class Exec {
     }
   }
 
+  /**
+   * 创建文件
+   */
+  public async touch() {
+    this.commandConfig['touch'](this.command);
+  }
+
   public async chooseCommand(): Promise<{ command: Constant.InitPackage }> {
     return inquirer.prompt({
       type: 'list',
@@ -47,6 +59,10 @@ class Exec {
   }
 }
 
-export default function () {
-  new Exec(arguments).run();
+export function init () {
+  new Exec(arguments).init();
+}
+
+export function touch() {
+  new Exec(arguments).touch();
 }

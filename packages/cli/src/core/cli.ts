@@ -13,7 +13,10 @@ import { Command } from 'commander';
 import { getNpmSemverVersions } from '@utils/npm';
 import { DEFAULT_CLI_HOME } from '../constant';
 
-import Exec from '@core/exec';
+import {
+  init,
+  touch
+} from '@core/exec';
 import log from '@utils/log';
 
 
@@ -68,19 +71,25 @@ export default class Cli {
       .command('init [projectName]')
       .description('初始化项目')
       .option('-f, --force', '是否开启强制初始化项目', false)
-      .action(Exec);
+      .action(init);
 
     this.program
       .command('vue [projectName]')
       .description('初始化Vue项目')
       .option('-f, --force', '是否开启强制初始化项目', false)
-      .action(Exec);
+      .action(init);
 
     this.program
       .command('taro [projectName]')
       .description('初始化Taro项目')
       .option('-f, --force', '是否开启强制初始化项目', false)
-      .action(Exec);
+      .action(init);
+
+    this.program
+      .command('touch [fileType] [filePath]')
+      .description('创建文件')
+      .option('-y, --yes', '是否使用默认文件模板', false)
+      .action(touch);
 
     /* 监听debug */
     this.program.on('option:debug',  () => {
