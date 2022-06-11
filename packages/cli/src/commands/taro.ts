@@ -1,12 +1,12 @@
-import Init, { NInit } from '@models/init';
+import Init, { IInitCommand, ITaroProject } from '@models/init';
 
 const inquirer = require('inquirer');
 
 import log from '@utils/log';
 import { TaroTemplate, PromptConfig } from '@constant';
 import { isValidName, formatDate } from '@utils/common';
-class Taro extends Init {
-  projectInfo: NInit.TaroProject = {
+class Taro extends Init<ITaroProject> {
+  projectInfo: ITaroProject = {
     projectName: '',
     projectVersion: '',
     description: '',
@@ -14,12 +14,11 @@ class Taro extends Init {
     appId: ''
   };
 
-  constructor (command: NInit.Command) {
-    super(command);
+  constructor (command: IInitCommand) {
+    super(command, TaroTemplate);
   }
 
   public init() {
-    this.force = this.command.options.force;
     if (isValidName(this.command.projectName)) {
       this.projectInfo.projectName = this.command.projectName;
     } else {
@@ -29,23 +28,7 @@ class Taro extends Init {
   }
 
   public async exec() {
-    try {
-      await this.checkDir();
-      this.projectBaseInfo = await this.getProjectBaseInfo();
-      this.projectInfo = await this.getProjectCustomInfo();
-      this.templateInfo = await this.chooseTemplate(PromptConfig.projectTemplate(TaroTemplate));
-      await this.downloadTemplate();
-      await this.installTemplate();
-      await this.ejsRender(this.projectInfo);
-      const { installCommand, startCommand } = this.templateInfo;
-      // 依赖安装
-      await this.execCommand(installCommand, '依赖安装失败！');
-      // 启动命令执行
-      await this.execCommand(startCommand, '启动执行命令失败！');
-      log.verbose('projectInfo', this.projectInfo);
-    } catch (e) {
-      throw e;
-    }
+    await super.exec();
   }
 
   public async getProjectCustomInfo() {

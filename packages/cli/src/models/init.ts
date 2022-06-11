@@ -1,5 +1,7 @@
 'use strict';
 
+import { IBaseCommand } from '../../types/base';
+
 const path = require('path');
 const inquirer = require('inquirer');
 const userHome = require('user-home');
@@ -22,45 +24,46 @@ import {
   PromptConfig,
   TEMPLATE_TYPE_NORMAL,
   TEMPLATE_TYPE_CUSTOM,
-  WHITE_COMMAND
+  WHITE_COMMAND,
+  ITemplate
 } from '../constant';
 
 
-export namespace NInit {
-  export interface Command extends BaseCommand {
-    /* 项目名称 */
-    projectName: string
-  }
-
-  export interface ProjectBaseInfo {
-    /* 项目名称 */
-    projectName: string
-    /* 项目版本 */
-    projectVersion: string
-    /* 项目描述信息 */
-    description: string
-  }
-
-  export interface TaroProject extends ProjectBaseInfo {
-    /* 日期 */
-    date: string
-    /* 微信AppId */
-    appId: string
-  }
-
-  export interface VueProject extends ProjectBaseInfo {
-
-  }
+export interface IInitCommand extends IBaseCommand {
+  /* 项目名称 */
+  projectName: string
 }
 
-export default class Init extends Command<NInit.Command>{
-  projectBaseInfo: NInit.ProjectBaseInfo = {
+export interface IProjectBaseInfo {
+  /* 项目名称 */
+  projectName: string
+  /* 项目版本 */
+  projectVersion: string
+  /* 项目描述信息 */
+  description: string
+}
+
+export interface ITaroProject extends IProjectBaseInfo {
+  /* 日期 */
+  date: string
+  /* 微信AppId */
+  appId: string
+}
+
+export interface IVueProject extends IProjectBaseInfo {
+
+}
+
+export default class Init<P> extends Command<IInitCommand>{
+  projectInfo!: P;
+  template: ITemplate[];
+  projectBaseInfo: IProjectBaseInfo = {
     projectName: '',
     projectVersion: '',
     description: ''
   };
 
-  templateInfo: Constant.Template = {
+  templateInfo: ITemplate = {
     name: '',
     npmName: '',
     version: '',
@@ -74,8 +77,9 @@ export default class Init extends Command<NInit.Command>{
   templatePackage;
   force: boolean = false;
 
-  constructor (command: NInit.Command) {
+  constructor (command: IInitCommand, template: ITemplate[]) {
     super(command);
+    this.template = template;
     this.force = this.command.options.force;
     if (isValidName(this.command.projectName)) {
       this.projectBaseInfo.projectName = this.command.projectName;
@@ -85,6 +89,25 @@ export default class Init extends Command<NInit.Command>{
     log.verbose('this.projectBaseInfo', this.projectBaseInfo);
   }
 
+  public async exec() {
+    try {
+      await this.checkDir();
+      this.projectBaseInfo = await this.getProjectBaseInfo();
+      this.projectInfo = await this.getProjectCustomInfo();
+      this.templateInfo = await this.chooseTemplate(PromptConfig.projectTemplate(this.template));
+      await this.downloadTemplate();
+      await this.installTemplate();
+      await this.ejsRender(this.projectInfo);
+      const { installCommand, startCommand } = this.templateInfo;
+      // 依赖安装
+      await this.execCommand(installCommand, '依赖安装失败！');
+      // 启动命令执行
+      await this.execCommand(startCommand, '启动执行命令失败！');
+      log.verbose('projectInfo', this.projectInfo);
+    } catch (e) {
+      throw e;
+    }
+  }
 
   /**
    * 检查当前目录是否为空，如果为空，则询问是否清空目录
@@ -128,7 +151,7 @@ export default class Init extends Command<NInit.Command>{
    *   description: string
    * }
    */
-  public async getProjectBaseInfo(): Promise<NInit.ProjectBaseInfo> {
+  public async getProjectBaseInfo(): Promise<IProjectBaseInfo> {
     let { projectName } = this.projectBaseInfo;
     // 项目名称
     if (!projectName) {
@@ -146,9 +169,9 @@ export default class Init extends Command<NInit.Command>{
 
   /**
    * 选择项目模板
-   * @returns Constant.Template
+   * @returns ITemplate
    */
-  public async chooseTemplate(prompt): Promise<Constant.Template> {
+  public async chooseTemplate(prompt): Promise<ITemplate> {
     try {
       const { projectTemplate } = await inquirer.prompt(prompt);
       return projectTemplate;
@@ -289,6 +312,10 @@ export default class Init extends Command<NInit.Command>{
       throw new Error(errMsg);
     }
     return ret;
+  }
+
+  public async getProjectCustomInfo(): Promise<P> {
+    throw new Error('必须实现自定义项目数据获取功能！');
   }
 
   public checkCommand(cmd) {

@@ -1,8 +1,10 @@
+import { IInitCommand } from '@models/init';
+
 const inquirer = require('inquirer');
 
 import log from '@utils/log';
 import { GetCommandOptions } from '@utils/command';
-import { INIT_PACKAGE } from '@constant';
+import { IInitPackage, INIT_PACKAGE } from '@constant';
 import {
   Taro,
   Vue,
@@ -10,7 +12,7 @@ import {
 } from '@commands/index';
 
 class Exec {
-  command: NInit.Command;
+  command: IInitCommand;
   commandConfig = {
     vue: Vue,
     taro: Taro,
@@ -36,7 +38,7 @@ class Exec {
     if (!command.isNpmPkg) {
       this.commandConfig[command.packageName](this.command);
     } else {
-      /* TODO 加载npm包进行初始化 */
+      /* TODO 加载npm包并执行 */
 
     }
   }
@@ -48,7 +50,7 @@ class Exec {
     this.commandConfig['touch'](this.command);
   }
 
-  public async chooseCommand(): Promise<{ command: Constant.InitPackage }> {
+  public async chooseCommand(): Promise<{ command: IInitPackage }> {
     return inquirer.prompt({
       type: 'list',
       name: 'command',

@@ -1,4 +1,4 @@
-declare interface BaseCommand {
+export interface IBaseCommand {
   /* 命令名称 */
   name: string
   /* 命令options */

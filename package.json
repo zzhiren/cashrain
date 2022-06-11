@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev:cli": "tsc --watch --project packages/cli",
-    "build:cli": "tsc --watch --project packages/cli  --removeComments"
+    "build:cli": "tsc --project packages/cli  --removeComments --declaration --sourceMap false"
   },
   "dependencies": {
     "@types/cli-spinner": "^0.2.1",

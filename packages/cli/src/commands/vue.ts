@@ -1,20 +1,19 @@
-import Init, { NInit } from '@models/init';
+import Init, { IInitCommand, IVueProject } from '@models/init';
 import log from '@utils/log';
 import { isValidName } from '@utils/common';
-import { PromptConfig, VueTemplate } from '@constant';
+import { VueTemplate } from '@constant';
 
-class Vue extends Init{
-  projectInfo: NInit.VueProject = {
+class Vue extends Init<IVueProject>{
+  projectInfo: IVueProject = {
     projectName: '',
     projectVersion: '',
     description: ''
   };
-  constructor (cmdOptions: NInit.Command) {
-    super(cmdOptions);
+  constructor (cmdOptions: IInitCommand) {
+    super(cmdOptions, VueTemplate);
   }
 
   public init() {
-    this.force = this.command.options.force;
     if (isValidName(this.command.projectName)) {
       this.projectInfo.projectName = this.command.projectName;
     } else {
@@ -24,23 +23,7 @@ class Vue extends Init{
   }
 
   public async exec() {
-    try {
-      await this.checkDir();
-      this.projectBaseInfo = await this.getProjectBaseInfo();
-      this.projectInfo = await this.getProjectCustomInfo();
-      this.templateInfo = await this.chooseTemplate(PromptConfig.projectTemplate(VueTemplate));
-      await this.downloadTemplate();
-      await this.installTemplate();
-      await this.ejsRender(this.projectInfo);
-      const { installCommand, startCommand } = this.templateInfo;
-      // 依赖安装
-      await this.execCommand(installCommand, '依赖安装失败！');
-      // 启动命令执行
-      await this.execCommand(startCommand, '启动执行命令失败！');
-      log.verbose('projectInfo', this.projectInfo);
-    } catch (e) {
-      throw e;
-    }
+    await super.exec();
   }
 
   public async getProjectCustomInfo() {

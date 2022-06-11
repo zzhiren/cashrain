@@ -1,10 +1,43 @@
+/**
+ * Init Command配置，可以选择不同的初始化命令，支持本地cli的文件和npm包
+ */
+export interface IInitPackage {
+  /* isNpmPkg为false时为模块文件名称否则为npm包名称 */
+  packageName: string
+  /* 如果为npm包则表示包版本 */
+  version: string
+  /* 描述信息 */
+  description: string
+  /* 是否为npm包 */
+  isNpmPkg: boolean
+}
+
+export interface ITemplate {
+  /* 模板名称 */
+  name: string
+  /* npm包名称 */
+  npmName: string
+  /* 版本 */
+  version: string
+  /* 项目类型 normal|component */
+  type: string
+  /* 安装命令 */
+  installCommand: string
+  /* 启动命令 */
+  startCommand: string
+  /* 标签 */
+  tag: string[]
+  /* 忽略文件 */
+  ignore: string[]
+}
+
 export const DEFAULT_CLI_HOME: string = '.cashrain-cli';
 export const NPM_NAME: string = '@cashrain/cli';
 export const DEPENDENCIES_PATH: string = 'dependencies';
 export const LOWEST_NODE_VERSION: string = '13.0.0';
 export const HEADING: string = 'cashrain';
 
-export const INIT_PACKAGE: Constant.InitPackage[] = [
+export const INIT_PACKAGE: IInitPackage[] = [
   {
     packageName: 'vue',
     version: '',
@@ -120,9 +153,10 @@ export const PromptConfig = {
     }
   },
   projectTemplate: function (
-    templateList: Constant.Template[],
+    templateList: ITemplate[],
     title: string = '项目'
   ) {
+
     return {
       type: 'list',
       name: 'projectTemplate',
@@ -135,7 +169,7 @@ export const PromptConfig = {
   }
 };
 
-export const TaroTemplate: Constant.Template[] = [
+export const TaroTemplate: ITemplate[] = [
   {
     name: 'Taro Typescript Class模板',
     npmName: '@cashrain/taro-typescript-class-template',
@@ -148,7 +182,7 @@ export const TaroTemplate: Constant.Template[] = [
   }
 ];
 
-export const VueTemplate: Constant.Template[] = [
+export const VueTemplate: ITemplate[] = [
   {
     name: 'vue2标准模板',
     npmName: '@cashrain/vue2-standard-template',

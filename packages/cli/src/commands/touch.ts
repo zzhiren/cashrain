@@ -1,10 +1,10 @@
-export namespace NTouch {
-  export interface Command extends BaseCommand {
-    /* 创建的文件类型 */
-    fileType: string
-    /* 创建的文件路径 */
-    filetPath: string
-  }
+import { IBaseCommand } from '../../types/base';
+
+export interface Command extends IBaseCommand {
+  /* 创建的文件类型 */
+  fileType: string
+  /* 创建的文件路径 */
+  filetPath: string
 }
 
 class Touch {
@@ -13,7 +13,7 @@ class Touch {
     taro: 'taro',
     ts: 'ts'
   };
-  constructor (cmdOptions: NTouch.Command) {
+  constructor (cmdOptions: Command) {
     console.log(cmdOptions);
   }
 
